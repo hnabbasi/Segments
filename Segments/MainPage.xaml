@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:local="clr-namespace:Segments;assembly=Segments"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="true"
+             mc:Ignorable="d"
+             x:Class="Segments.MainPage"
+             Title="Segments"
+             BackgroundColor="White">
+    <StackLayout x:Name="MainStack">
+        <StackLayout.Margin>
+            <OnPlatform x:TypeArguments="Thickness" iOS="20"/>
+        </StackLayout.Margin>
+        
+        <local:SegmentView SelectedIndexChanged="OnSegmentSelected">
+            <local:SegmentView.Children>
+                <local:Segment Title="View A"/>
+                <local:Segment Title="View B"/>
+            </local:SegmentView.Children>
+        </local:SegmentView>
+        
+        <Label x:Name="ViewSelected"
+               Text="Select a segment"
+               FontSize="Small"
+               HorizontalTextAlignment="Center"/>
+        
+        <StackLayout Orientation="Horizontal"
+                     VerticalOptions="CenterAndExpand"
+                     Margin="10">
+            <Label Text="Unit"
+                   VerticalTextAlignment="Center"
+                   HorizontalOptions="FillAndExpand"/>
+            <local:SegmentView HorizontalOptions="FillAndExpand">
+                <local:SegmentView.Children>
+                    <local:Segment Title="C"/>
+                    <local:Segment Title="F"/>
+                </local:SegmentView.Children>
+            </local:SegmentView>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>
