@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Xamarin.Forms;
 
@@ -9,12 +10,38 @@ namespace Segments
     [DesignTimeVisible(false)]
     public partial class MainPage : ContentPage
     {
+        private Tuple<string, Color>[] _colors;
+
         public MainPage()
         {
             InitializeComponent();
+            _colors = new Tuple<string, Color>[]
+            {
+                new Tuple<string, Color>("Red", Color.Red),
+                new Tuple<string, Color>("Blue", Color.Blue),
+                new Tuple<string, Color>("Green", Color.Green),
+                new Tuple<string, Color>("Purple", Color.Purple),
+            };
+            ColorPicker.ItemsSource = _colors;
 
             // go ahead, play with it
             //AddTime();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            CornerRadiusSlider.Maximum = top.Height / 2;
+        }
+
+        public void CornerRadiusChanged(object sender, ValueChangedEventArgs e)
+        {
+            top.CornerRadius = (int)e.NewValue;
+        }
+
+        public void TintChanged(object sender, EventArgs e)
+        {
+            top.TintColor = _colors[ColorPicker.SelectedIndex].Item2;
         }
 
         public void OnSegmentSelected(object sender, SelectedItemChangedEventArgs e)

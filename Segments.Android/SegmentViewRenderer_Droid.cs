@@ -60,7 +60,7 @@ namespace Segments.Droid.Renderers
                 selected.Checked = true;
             }
         }
-
+        
         /// <summary>
         /// When a property of an element changed.
         /// </summary>
@@ -131,8 +131,8 @@ namespace Segments.Droid.Renderers
             _backgroundColor = Element.BackgroundColor.ToAndroid();
             _tintColor = Element.TintColor.ToAndroid();
             _unselectedTintColor = Element.UnselectedTintColor.ToAndroid();
-            _selectedTextColor = Element.SelectedTextColor.ToAndroid();
-            _unselectedTextColor = Element.UnselectedTextColor.ToAndroid();
+            _unselectedTextColor = Element.SelectedTextColor.ToAndroid();
+            _selectedTextColor = Element.UnselectedTextColor.ToAndroid();
         }
 
         void UpdateButtonColors(RadioButton rb)
@@ -146,30 +146,32 @@ namespace Segments.Droid.Renderers
             GradientDrawable _selectedShape;
             GradientDrawable _unselectedShape;
 
-            if (children[0] is LayerDrawable layers)
+            if (children[0] is InsetDrawable inner)
             {
-                layers = (LayerDrawable)children[0];
-                var outer = layers.GetDrawable(0);
-                var outerInset = outer as InsetDrawable;
-                _selectedShape = outerInset.Drawable as GradientDrawable;
+                //layers = (LayerDrawable)children[0];
+                //var outer = layers.GetDrawable(0);
+                //var outerInset = outer as InsetDrawable;
+                //_selectedShape = outerInset.Drawable as GradientDrawable;
 
-                var inner = layers.GetDrawable(1);
+                ////var inner = layers.GetDrawable(1);
+                //var inner = layers.GetDrawable(0);
                 var innerInset = inner as InsetDrawable;
 
-                var selectorLine = innerInset.Drawable as GradientDrawable;
-                selectorLine.SetStroke(_strokeWidth, color);
+                _selectedShape = innerInset.Drawable as GradientDrawable;
+                //_selectedShape.SetStroke(_strokeWidth, color);
             }
             else
             {
                 // Doesnt works on API < 18
                 _selectedShape = children[0] is GradientDrawable ? (GradientDrawable)children[0] : (GradientDrawable)((InsetDrawable)children[0]).Drawable;
             }
-            _selectedShape.SetStroke(_strokeWidth, _backgroundColor);
-            _selectedShape.SetColor(_backgroundColor);
+            //_selectedShape.SetStroke(_strokeWidth, _backgroundColor);
+            _selectedShape.SetStroke(_strokeWidth, color);
+            _selectedShape.SetColor(color);
 
             _unselectedShape = children[1] is GradientDrawable ? (GradientDrawable)children[1] : (GradientDrawable)((InsetDrawable)children[1]).Drawable;
             _unselectedShape.SetColor(_unselectedTintColor);
-            _unselectedShape.SetStroke(0, _unselectedTintColor);
+            _unselectedShape.SetStroke(0, color);
         }
 
         void OnRadioGroupCheckedChanged(object sender, RadioGroup.CheckedChangeEventArgs e)
@@ -184,8 +186,8 @@ namespace Segments.Droid.Renderers
 
             var rb = (RadioButton)rg.GetChildAt(radioId);
 
-            _currentRadioButton?.SetTextColor(_unselectedTextColor);
-            rb.SetTextColor(_tintColor);
+            _currentRadioButton?.SetTextColor(_tintColor);
+            rb.SetTextColor(_selectedTextColor);
             UpdateButtonColors(rb);
 
             _currentRadioButton = rb;
@@ -219,21 +221,24 @@ namespace Segments.Droid.Renderers
             return drawable;
         }
 
-        LayerDrawable GetCheckedDrawable()
+        InsetDrawable GetCheckedDrawable()
         {
             var rect = new GradientDrawable();
             rect.SetShape(ShapeType.Rectangle);
             rect.SetColor(GetColorList());
-            rect.SetStroke(0, _tintColor);
+            //rect.SetStroke(0, _tintColor);
+            rect.SetStroke(1, _tintColor);
+            rect.SetCornerRadius(0);
 
-            var line = new GradientDrawable();
-            line.SetShape(ShapeType.Rectangle);
-            line.SetStroke(_strokeWidth, _tintColor);
+            //var line = new GradientDrawable();
+            //line.SetShape(ShapeType.Rectangle);
+            //line.SetStroke(_strokeWidth, _tintColor);
 
-            return new LayerDrawable(new Drawable[] {
-                new InsetDrawable(rect, 0),
-                new InsetDrawable(line, -_strokeWidth, -_strokeWidth, -_strokeWidth, 0)
-            });
+            return new InsetDrawable(rect, 0);
+            //return new LayerDrawable(new Drawable[] {
+            //    new InsetDrawable(rect, 0),
+            //    //new InsetDrawable(line, -_strokeWidth, -_strokeWidth, -_strokeWidth, 0)
+            //});
         }
 
         InsetDrawable GetUncheckedDrawable()
@@ -242,7 +247,7 @@ namespace Segments.Droid.Renderers
             rect.SetShape(ShapeType.Rectangle);
             rect.SetColor(GetColorList());
             rect.SetStroke(0, _unselectedTintColor);
-
+            
             return new InsetDrawable(rect, 0);
         }
 
@@ -251,8 +256,8 @@ namespace Segments.Droid.Renderers
             return new ColorStateList(new int[][] {
                 new int[] { Android.Resource.Attribute.StateChecked,
                             -Android.Resource.Attribute.StateChecked }},
-                new int[] { _tintColor,
-                            _unselectedTintColor });
+                new int[] { _unselectedTintColor,
+                            _tintColor });
         }
 
         #endregion

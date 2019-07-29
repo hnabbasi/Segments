@@ -5,6 +5,7 @@ using UIKit;
 using System.Linq;
 using Segments;
 using Segments.iOS.Renderers;
+using System;
 
 [assembly: ExportRenderer(typeof(SegmentView), typeof(SegmentControlRenderer))]
 namespace Segments.iOS.Renderers
@@ -30,12 +31,16 @@ namespace Segments.iOS.Renderers
                     _control.InsertSegment(Element.Children.ElementAt(i).Title, i, false);
                 }
 
+                _control.ClipsToBounds = true;
                 _control.TintColor = Element.TintColor.ToUIColor();
                 _control.SelectedSegment = Element.SelectedIndex;
-                _control.ClipsToBounds = true;
                 _control.BackgroundColor = Element.BackgroundColor.ToUIColor();
+                _control.Layer.CornerRadius = Element.CornerRadius;
+                _control.Layer.BorderColor = Element.TintColor.ToCGColor();
+                _control.Layer.BorderWidth = (nfloat)Element.BorderWidth;
+                _control.Layer.MasksToBounds = true;
                 
-                SetSelectedTextColor(false);
+                SetSelectedTextColor();
                 SetNativeControl(_control);
             }
 
@@ -56,27 +61,36 @@ namespace Segments.iOS.Renderers
             {
                 case "SelectedSegment":
                     _control.SelectedSegment = Element.SelectedIndex;
+                    SetSelectedTextColor();
                     break;
                 case "TintColor":
-                    _control.TintColor = Element.IsEnabled ? Element.TintColor.ToUIColor() : Element.UnselectedTintColor.ToUIColor();
+                    var c = Element.IsEnabled ? Element.TintColor.ToUIColor() : Element.UnselectedTintColor.ToUIColor();
+                    _control.TintColor = c;
+                    _control.Layer.BorderColor = c.CGColor;
                     break;
                 case "IsEnabled":
                     _control.Enabled = Element.IsEnabled;
                     _control.TintColor = Element.IsEnabled ? Element.TintColor.ToUIColor() : Element.UnselectedTintColor.ToUIColor();
                     break;
                 case "SelectedTextColor":
-                    SetSelectedTextColor(true);
+                    SetSelectedTextColor();
+                    break;
+                case "CornerRadius":
+                    _control.Layer.CornerRadius = (nfloat)Element.CornerRadius;
+                    break;
+                case "BorderWidth":
+                    _control.Layer.BorderWidth = (nfloat)Element.BorderWidth;
                     break;
             }
         }
 
-        void SetSelectedTextColor(bool isEnabled)
+        void SetSelectedTextColor()
         {
             var attr = new UITextAttributes
             {
-                TextColor = isEnabled ? Element.SelectedTextColor.ToUIColor() : Element.TintColor.ToUIColor()
+                TextColor = Element.IsEnabled ? Element.SelectedTextColor.ToUIColor() : Element.TintColor.ToUIColor()
             };
-            _control.SetTitleTextAttributes(attr, isEnabled ? UIControlState.Selected : UIControlState.Normal);
+            _control.SetTitleTextAttributes(attr, Element.IsEnabled ? UIControlState.Selected : UIControlState.Normal);
         }
 
         void OnSelectedIndexChanged(object sender, System.EventArgs e)

@@ -10,35 +10,65 @@
              x:Class="Segments.MainPage"
              Title="Segments"
              BackgroundColor="White">
-    <StackLayout x:Name="MainStack">
-        <StackLayout.Margin>
-            <OnPlatform x:TypeArguments="Thickness" iOS="20"/>
-        </StackLayout.Margin>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackLayout x:Name="MainStack"
+                     Margin="20"
+                     VerticalOptions="Center">
         
-        <local:SegmentView SelectedIndexChanged="OnSegmentSelected">
-            <local:SegmentView.Children>
-                <local:Segment Title="View A"/>
-                <local:Segment Title="View B"/>
-            </local:SegmentView.Children>
-        </local:SegmentView>
-        
-        <Label x:Name="ViewSelected"
-               Text="Select a segment"
-               FontSize="Small"
-               HorizontalTextAlignment="Center"/>
-        
-        <StackLayout Orientation="Horizontal"
-                     VerticalOptions="CenterAndExpand"
-                     Margin="10">
-            <Label Text="Unit"
-                   VerticalTextAlignment="Center"
-                   HorizontalOptions="FillAndExpand"/>
-            <local:SegmentView HorizontalOptions="FillAndExpand">
+            <local:SegmentView x:Name="top"
+                               SelectedIndexChanged="OnSegmentSelected">
                 <local:SegmentView.Children>
-                    <local:Segment Title="C"/>
-                    <local:Segment Title="F"/>
+                    <local:Segment Title="View A"/>
+                    <local:Segment Title="View B"/>
+                    <local:Segment Title="View C"/>
                 </local:SegmentView.Children>
             </local:SegmentView>
+        
+            <Label x:Name="ViewSelected"
+                    Text="Select a segment"
+                    FontSize="Small"
+                    HorizontalTextAlignment="Center"/>
+        
+            <!--<StackLayout Orientation="Horizontal"
+                            VerticalOptions="CenterAndExpand"
+                            Margin="10">
+                <Label Text="Unit"
+                        VerticalTextAlignment="Center"
+                        HorizontalOptions="FillAndExpand"/>
+                <local:SegmentView HorizontalOptions="FillAndExpand">
+                    <local:SegmentView.Children>
+                        <local:Segment Title="C"/>
+                        <local:Segment Title="F"/>
+                    </local:SegmentView.Children>
+                </local:SegmentView>
+            </StackLayout>-->
         </StackLayout>
-    </StackLayout>
+        <StackLayout BackgroundColor="Silver" Grid.Row="1" Padding="20">
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Corner Radius"
+                        VerticalTextAlignment="Center"
+                        HorizontalOptions="FillAndExpand"/>
+                <Slider x:Name="CornerRadiusSlider"
+                        Minimum="0"
+                        Maximum="20"
+                        ValueChanged="CornerRadiusChanged"
+                        HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Tint Color"
+                        VerticalTextAlignment="Center"
+                        HorizontalOptions="FillAndExpand"/>
+                <Picker x:Name="ColorPicker"
+                        Title="Select color"
+                        ItemDisplayBinding="{Binding Item1}"
+                        SelectedIndexChanged="TintChanged"
+                        HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+        </StackLayout>
+    </Grid>
 </ContentPage>
