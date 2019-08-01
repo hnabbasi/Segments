@@ -199,6 +199,7 @@ namespace Segments.Droid.Renderers
             rb.LayoutParameters = new RadioGroup.LayoutParams(0, LayoutParams.MatchParent, 1.0f);
             rb.SetMinimumHeight(_buttonHeight);
             rb.SetTextSize(ComplexUnitType.Sp, 14.0f);
+            rb.SetAllCaps(true);
             return rb;
         }
 
