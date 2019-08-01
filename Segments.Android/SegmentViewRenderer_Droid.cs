@@ -89,7 +89,10 @@ namespace Segments.Droid.Renderers
 
         void InitializeFields()
         {
-            _buttonHeight = ConvertToAndroid((float)Element.HeightRequest);
+            var height = ConvertToAndroid((float)Element.HeightRequest) > 0
+                ? ConvertToAndroid((float)Element.HeightRequest)
+                : ConvertToAndroid(30.0f);
+            _buttonHeight = height;
             _strokeWidth = ConvertToAndroid((float)Element.BorderWidth);
             _cornerRadius = ConvertToAndroid((float)Element.CornerRadius);
         }
@@ -197,9 +200,10 @@ namespace Segments.Droid.Renderers
             rb.SetBackground(GetRadioButtonDrawable(position));
             rb.SetTextColor(RadioButtonColorStateList);
             rb.LayoutParameters = new RadioGroup.LayoutParams(0, LayoutParams.MatchParent, 1.0f);
-            rb.SetMinimumHeight(_buttonHeight);
-            rb.SetTextSize(ComplexUnitType.Sp, 14.0f);
+            rb.SetHeight(_buttonHeight);
+            rb.SetTextSize(ComplexUnitType.Sp, 15.0f);
             rb.SetAllCaps(true);
+            rb.SetTypeface(null, TypefaceStyle.Bold);
             return rb;
         }
 

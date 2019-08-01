@@ -23,7 +23,6 @@ namespace Segments.iOS.Renderers
 
             if (Control == null)
             {
-
                 _control = new UISegmentedControl();
 
                 for (int i = 0; i < Element.Children.Count; i++)
@@ -34,12 +33,19 @@ namespace Segments.iOS.Renderers
                 _control.ClipsToBounds = true;
                 _control.TintColor = Element.TintColor.ToUIColor();
                 _control.SelectedSegment = Element.SelectedIndex;
-                _control.BackgroundColor = Element.BackgroundColor.ToUIColor();
-                _control.Layer.CornerRadius = Element.CornerRadius;
-                _control.Layer.BorderColor = Element.TintColor.ToCGColor();
-                _control.Layer.BorderWidth = (nfloat)Element.BorderWidth;
+                _control.BackgroundColor = Element.BackgroundColor.ToUIColor();                
                 _control.Layer.MasksToBounds = true;
-                
+
+                _control.Layer.BorderColor = Element.IsBorderColorSet()
+                    ? Element.BorderColor.ToCGColor()
+                    : Element.TintColor.ToCGColor();
+
+                if (Element.IsCornerRadiusSet())
+                {
+                    _control.Layer.CornerRadius = Element.CornerRadius;
+                    _control.Layer.BorderWidth = (nfloat)Element.BorderWidth;
+                }
+
                 SetSelectedTextColor();
                 SetNativeControl(_control);
             }
@@ -75,12 +81,12 @@ namespace Segments.iOS.Renderers
                 case "SelectedTextColor":
                     SetSelectedTextColor();
                     break;
-                case "CornerRadius":
-                    _control.Layer.CornerRadius = (nfloat)Element.CornerRadius;
-                    break;
-                case "BorderWidth":
-                    _control.Layer.BorderWidth = (nfloat)Element.BorderWidth;
-                    break;
+                //case "CornerRadius":
+                //    _control.Layer.CornerRadius = (nfloat)Element.CornerRadius;
+                //    break;
+                //case "BorderWidth":
+                //    _control.Layer.BorderWidth = (nfloat)Element.BorderWidth;
+                //    break;
             }
         }
 
@@ -100,8 +106,9 @@ namespace Segments.iOS.Renderers
 
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
             _control.ValueChanged -= OnSelectedIndexChanged;
+            _control.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

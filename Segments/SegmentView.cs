@@ -6,9 +6,9 @@ namespace Segments
 {
     public class SegmentView : View, IViewContainer<Segment>, IBorderElement
     {
-        private static readonly double _borderWidthDefaultValue = Device.RuntimePlatform == Device.Android ? 1.75 : 1.0;
+        private static readonly double _borderWidthDefaultValue = Device.RuntimePlatform == Device.Android ? 2 : 1.0;
         private static readonly Color _borderColorDefaultValue = Device.RuntimePlatform == Device.Android ? Color.FromRgb(41, 98, 255) : Color.Blue;
-        private static readonly int _cornerRadiusDefaultValue = 2;
+        private static readonly int _cornerRadiusDefaultValue = Device.RuntimePlatform == Device.Android ? 6 : 2;
 
         public IList<Segment> Children { get; set; } = new List<Segment>();
         public event EventHandler<SelectedItemChangedEventArgs> SelectedIndexChanged;

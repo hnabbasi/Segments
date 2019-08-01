@@ -32,7 +32,7 @@ namespace Segments
         {
             base.OnAppearing();
             var max = Device.RuntimePlatform == Device.iOS ? top.HeightRequest / 2 : 20;
-            CornerRadiusSlider.Maximum = max > CornerRadiusSlider.Minimum ? max : CornerRadiusSlider.Minimum + 1;
+            CornerRadiusSlider.Maximum = max < 10 ? 20 : max;
         }
 
         public void CornerRadiusChanged(object sender, ValueChangedEventArgs e)
