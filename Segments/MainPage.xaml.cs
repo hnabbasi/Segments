@@ -31,12 +31,20 @@ namespace Segments
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            CornerRadiusSlider.Maximum = top.Height / 2;
+            var max = Device.RuntimePlatform == Device.iOS ? top.HeightRequest / 2 : 20;
+            CornerRadiusSlider.Maximum = max > CornerRadiusSlider.Minimum ? max : CornerRadiusSlider.Minimum + 1;
         }
 
         public void CornerRadiusChanged(object sender, ValueChangedEventArgs e)
         {
             top.CornerRadius = (int)e.NewValue;
+            CornerRadiusValue.Text = ((int)e.NewValue).ToString();
+        }
+
+        protected void OnBorderWidthChanged(object sender, ValueChangedEventArgs e)
+        {
+            top.BorderWidth = e.NewValue;
+            BorderWidthValue.Text = ((int)e.NewValue).ToString();
         }
 
         public void TintChanged(object sender, EventArgs e)
@@ -46,7 +54,7 @@ namespace Segments
 
         public void OnSegmentSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            ViewSelected.Text = $"Selected '{((Segment)e.SelectedItem).Title}' at index {e.SelectedItemIndex}";
+            //ViewSelected.Text = $"Selected '{((Segment)e.SelectedItem).Title}' at index {e.SelectedItemIndex}";
         }
 
         void AddTime()

@@ -19,7 +19,7 @@
         <StackLayout x:Name="MainStack"
                      Margin="20"
                      VerticalOptions="Center">
-        
+            <Label Text="Default !?" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
             <local:SegmentView x:Name="top"
                                SelectedIndexChanged="OnSegmentSelected">
                 <local:SegmentView.Children>
@@ -28,11 +28,47 @@
                     <local:Segment Title="View C"/>
                 </local:SegmentView.Children>
             </local:SegmentView>
+            
+            <Label Text="Corner Radius" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
+            <local:SegmentView x:Name="top1"
+                               TintColor="Purple"
+                               CornerRadius="20">
+                <local:SegmentView.Children>
+                    <local:Segment Title="View A"/>
+                    <local:Segment Title="View B"/>
+                    <local:Segment Title="View C"/>
+                </local:SegmentView.Children>
+            </local:SegmentView>
+            
+            <Label Text="Border Color" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
+            <local:SegmentView x:Name="top2"
+                               TintColor="Purple"
+                               CornerRadius="20"
+                               BorderColor="Blue">
+                <local:SegmentView.Children>
+                    <local:Segment Title="View A"/>
+                    <local:Segment Title="View B"/>
+                    <local:Segment Title="View C"/>
+                </local:SegmentView.Children>
+            </local:SegmentView>
+            
+            <Label Text="Border Width" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
+            <local:SegmentView x:Name="top3"
+                               TintColor="Green"
+                               CornerRadius="20"
+                               BorderColor="Red"
+                               BorderWidth="4">
+                <local:SegmentView.Children>
+                    <local:Segment Title="View A"/>
+                    <local:Segment Title="View B"/>
+                    <local:Segment Title="View C"/>
+                </local:SegmentView.Children>
+            </local:SegmentView>
         
-            <Label x:Name="ViewSelected"
+            <!--<Label x:Name="ViewSelected"
                     Text="Select a segment"
                     FontSize="Small"
-                    HorizontalTextAlignment="Center"/>
+                    HorizontalTextAlignment="Center"/>-->
         
             <!--<StackLayout Orientation="Horizontal"
                             VerticalOptions="CenterAndExpand"
@@ -51,8 +87,13 @@
         <StackLayout BackgroundColor="Silver" Grid.Row="1" Padding="20">
             <StackLayout Orientation="Horizontal">
                 <Label Text="Corner Radius"
-                        VerticalTextAlignment="Center"
-                        HorizontalOptions="FillAndExpand"/>
+                       VerticalTextAlignment="Center"/>
+                <Label x:Name="CornerRadiusValue"
+                       Text="Default"
+                       FontSize="Small"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center"
+                       HorizontalOptions="EndAndExpand"/>
                 <Slider x:Name="CornerRadiusSlider"
                         Minimum="0"
                         Maximum="20"
@@ -68,6 +109,20 @@
                         ItemDisplayBinding="{Binding Item1}"
                         SelectedIndexChanged="TintChanged"
                         HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Border Width"
+                       VerticalTextAlignment="Center"/>
+                <Label x:Name="BorderWidthValue"
+                       Text="Default"
+                       FontSize="Small"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center"
+                       HorizontalOptions="EndAndExpand"/>
+                <Stepper x:Name="BorderWidthStepper"
+                         Minimum="0"
+                         Maximum="10"
+                         ValueChanged="OnBorderWidthChanged"/>
             </StackLayout>
         </StackLayout>
     </Grid>

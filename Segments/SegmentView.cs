@@ -6,17 +6,20 @@ namespace Segments
 {
     public class SegmentView : View, IViewContainer<Segment>, IBorderElement
     {
+        private static readonly double _borderWidthDefaultValue = Device.RuntimePlatform == Device.Android ? 1.75 : 1.0;
+        private static readonly Color _borderColorDefaultValue = Device.RuntimePlatform == Device.Android ? Color.FromRgb(41, 98, 255) : Color.Blue;
+        private static readonly int _cornerRadiusDefaultValue = 2;
+
         public IList<Segment> Children { get; set; } = new List<Segment>();
         public event EventHandler<SelectedItemChangedEventArgs> SelectedIndexChanged;
         public static BindableProperty TintColorProperty = BindableProperty.Create(nameof(TintColor), typeof(Color), typeof(SegmentView), Color.Blue);
         public static BindableProperty UnselectedTintColorProperty = BindableProperty.Create(nameof(UnselectedTintColor), typeof(Color), typeof(SegmentView), default(Color));
         public static BindableProperty SelectedTextColorProperty = BindableProperty.Create(nameof(SelectedTextColor), typeof(Color), typeof(SegmentView), Color.White);
         public static BindableProperty UnselectedTextColorProperty = BindableProperty.Create(nameof(UnselectedTextColor), typeof(Color), typeof(SegmentView), Color.Silver);
-        public static BindableProperty SelectedIndexProperty = BindableProperty.Create(nameof(SelectedIndex), typeof(int), typeof(SegmentView), defaultValue: 0, propertyChanged: OnSegmentSelected);
-        public static BindableProperty CornerRadiusProperty = BindableProperty.Create(nameof(CornerRadius), typeof(int), typeof(SegmentView));
-        public static BindableProperty BorderColorProperty = BindableProperty.Create(nameof(BorderColor), typeof(Color), typeof(SegmentView), Color.Blue, propertyChanged:OnBorderColorPropertyChanged);
-
-        public static BindableProperty BorderWidthProperty = BindableProperty.Create(nameof(BorderWidth), typeof(double), typeof(SegmentView), defaultValue: 1.0);
+        public static BindableProperty SelectedIndexProperty = BindableProperty.Create(nameof(SelectedIndex), typeof(int), typeof(SegmentView), 0, propertyChanged: OnSegmentSelected);
+        public static BindableProperty CornerRadiusProperty = BindableProperty.Create(nameof(CornerRadius), typeof(int), typeof(SegmentView), _cornerRadiusDefaultValue);
+        public static BindableProperty BorderColorProperty = BindableProperty.Create(nameof(BorderColor), typeof(Color), typeof(SegmentView), _borderColorDefaultValue, propertyChanged:OnBorderColorPropertyChanged);
+        public static BindableProperty BorderWidthProperty = BindableProperty.Create(nameof(BorderWidth), typeof(double), typeof(SegmentView), _borderWidthDefaultValue);
 
         public Color TintColor
         {
@@ -66,9 +69,9 @@ namespace Segments
             set => SetValue(BorderColorProperty, value);
         }
 
-        public int CornerRadiusDefaultValue => 2;
-        public Color BorderColorDefaultValue => Device.RuntimePlatform == Device.Android ? Color.FromRgb(41, 98, 255) : Color.Blue;
-        public double BorderWidthDefaultValue => 1.0;
+        public int CornerRadiusDefaultValue => _cornerRadiusDefaultValue;
+        public Color BorderColorDefaultValue => _borderColorDefaultValue;
+        public double BorderWidthDefaultValue => _borderWidthDefaultValue;
 
         public void OnBorderColorPropertyChanged(Color oldValue, Color newValue)
         {
