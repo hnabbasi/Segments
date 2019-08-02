@@ -54,7 +54,7 @@ namespace Segments
 
         public void OnSegmentSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            //ViewSelected.Text = $"Selected '{((Segment)e.SelectedItem).Title}' at index {e.SelectedItemIndex}";
+            ViewSelected.Text = $"Selected '{((Segment)e.SelectedItem).Title}' at index {e.SelectedItemIndex}";
         }
 
         void AddTime()

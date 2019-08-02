@@ -69,24 +69,10 @@ namespace Segments.iOS.Renderers
                     _control.SelectedSegment = Element.SelectedIndex;
                     SetSelectedTextColor();
                     break;
-                case "TintColor":
-                    var c = Element.IsEnabled ? Element.TintColor.ToUIColor() : Element.UnselectedTintColor.ToUIColor();
-                    _control.TintColor = c;
-                    _control.Layer.BorderColor = c.CGColor;
-                    break;
                 case "IsEnabled":
                     _control.Enabled = Element.IsEnabled;
                     _control.TintColor = Element.IsEnabled ? Element.TintColor.ToUIColor() : Element.UnselectedTintColor.ToUIColor();
                     break;
-                case "SelectedTextColor":
-                    SetSelectedTextColor();
-                    break;
-                //case "CornerRadius":
-                //    _control.Layer.CornerRadius = (nfloat)Element.CornerRadius;
-                //    break;
-                //case "BorderWidth":
-                //    _control.Layer.BorderWidth = (nfloat)Element.BorderWidth;
-                //    break;
             }
         }
 

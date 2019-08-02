@@ -29,6 +29,11 @@
                 </local:SegmentView.Children>
             </local:SegmentView>
             
+            <Label x:Name="ViewSelected"
+                    Text="Select a segment"
+                    FontSize="Small"
+                    HorizontalTextAlignment="Center"/>
+
             <Label Text="Corner Radius" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
             <local:SegmentView x:Name="top1"
                                TintColor="Purple"
@@ -65,10 +70,6 @@
                 </local:SegmentView.Children>
             </local:SegmentView>
         
-            <!--<Label x:Name="ViewSelected"
-                    Text="Select a segment"
-                    FontSize="Small"
-                    HorizontalTextAlignment="Center"/>-->
         
             <!--<StackLayout Orientation="Horizontal"
                             VerticalOptions="CenterAndExpand"

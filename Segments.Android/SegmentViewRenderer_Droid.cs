@@ -1,7 +1,5 @@
-using System;
 using System.ComponentModel;
 using Android.Content;
-using Android.Content.Res;
 using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.Util;
@@ -17,14 +15,16 @@ namespace Segments.Droid.Renderers
     public class SegmentControlRenderer : ViewRenderer<SegmentView, RadioGroup>
     {
         readonly Context _context;
+        readonly float _defaultControlHeight = 30.0f;
+        readonly float _defaultTextSize = 15.0f;
 
         RadioGroup _radioGroup;
         RadioButton _currentRadioButton;
 
         Color _tintColor;
-        //Color _unselectedTintColor;
+        Color _unselectedTintColor;
+        Color _unSelectedTextColor;
         Color _selectedTextColor;
-        Color _unselectedTextColor;
         Color _backgroundColor;
         Color _disabledColor = Color.Gray;
 
@@ -48,10 +48,9 @@ namespace Segments.Droid.Renderers
 
             if (Control == null)
             {
-                InitializeFields();
-                InitializeColors();
-                PopulateSegments();
-                SetNativeControl(_radioGroup);
+                //Initialize();
+                //PopulateSegments();
+                SetNativeControl(BuildControl());
             }
 
             if (e.OldElement != null && _radioGroup != null)
@@ -86,23 +85,24 @@ namespace Segments.Droid.Renderers
                 UpdateButtonColors(selectedRadioButton);
             }
         }
-
-        void InitializeFields()
+        
+        RadioGroup BuildControl()
         {
             var height = ConvertToAndroid((float)Element.HeightRequest) > 0
                 ? ConvertToAndroid((float)Element.HeightRequest)
-                : ConvertToAndroid(30.0f);
+                : ConvertToAndroid(_defaultControlHeight);
             _buttonHeight = height;
             _strokeWidth = ConvertToAndroid((float)Element.BorderWidth);
             _cornerRadius = ConvertToAndroid((float)Element.CornerRadius);
-        }
 
-        void PopulateSegments()
-        {
-            if (_radioGroup != null)
-            {
-                _radioGroup.RemoveAllViews();
-            }
+            _backgroundColor = Element.BackgroundColor.ToAndroid();
+            _tintColor = Element.TintColor.ToAndroid();
+            _strokeColor = Element.IsBorderColorSet() ? Element.BorderColor.ToAndroid() : Element.TintColor.ToAndroid();
+
+            // Temporarily disabling these
+            _unselectedTintColor = _backgroundColor;// Element.IsUnselectedTintColorSet() ? Element.UnselectedTintColor.ToAndroid() : _backgroundColor;
+            _selectedTextColor = Color.White;// Element.SelectedTextColor.ToAndroid();
+            _unSelectedTextColor = _tintColor;// Element.IsUnselectedTextColorSet() ? Element.UnselectedTextColor.ToAndroid() : _tintColor;
 
             _radioGroup = new RadioGroup(_context)
             {
@@ -117,7 +117,7 @@ namespace Segments.Droid.Renderers
                 ConfigureRadioButton(i, rb);
                 _radioGroup.AddView(rb);
             }
-            _radioGroup.SetMinimumHeight(_buttonHeight);
+            return _radioGroup;
         }
 
         void ConfigureRadioButton(int i, RadioButton rb)
@@ -129,7 +129,7 @@ namespace Segments.Droid.Renderers
             }
             else
             {
-                rb.SetTextColor(_unselectedTextColor);
+                rb.SetTextColor(_unSelectedTextColor);
             }
 
             UpdateButtonColors(rb);
@@ -137,14 +137,20 @@ namespace Segments.Droid.Renderers
             rb.Enabled = Element.IsEnabled;
         }
 
-        void InitializeColors()
+        void OnRadioGroupCheckedChanged(object sender, RadioGroup.CheckedChangeEventArgs e)
         {
-            _backgroundColor = Element.BackgroundColor.ToAndroid();
-            _tintColor = Element.TintColor.ToAndroid();
-            //_unselectedTintColor = Element.UnselectedTintColor.ToAndroid();
-            _unselectedTextColor = Element.SelectedTextColor.ToAndroid();
-            _selectedTextColor = Element.UnselectedTextColor.ToAndroid();
-            _strokeColor = Element.IsBorderColorSet() ? Element.BorderColor.ToAndroid() : Element.TintColor.ToAndroid();
+            if (!(sender is RadioGroup rg) || rg.CheckedRadioButtonId == -1)
+                return;
+
+            _currentRadioButton?.SetTextColor(_tintColor);
+            var index = rg.IndexOfChild(rg.FindViewById(rg.CheckedRadioButtonId));
+
+            var rb = (RadioButton)rg.GetChildAt(index);
+            rb.SetTextColor(_selectedTextColor);
+            UpdateButtonColors(rb);
+            _currentRadioButton = rb;
+
+            Element.SelectedIndex = index;
         }
 
         void UpdateButtonColors(RadioButton rb)
@@ -153,37 +159,12 @@ namespace Segments.Droid.Renderers
             var drawableContainerState = (DrawableContainer.DrawableContainerState)gradientDrawable.GetConstantState();
             var children = drawableContainerState.GetChildren();
 
-            var color = Element.IsEnabled ? _tintColor : _disabledColor;
-
             // Make sure it works on API < 18
             var _selectedShape = (GradientDrawable)(children[0] as InsetDrawable)?.Drawable;
-
-            _selectedShape.SetStroke(_strokeWidth, _strokeColor);
-            _selectedShape.SetColor(color);
+            _selectedShape.SetColor(Element.IsEnabled ? _tintColor : _disabledColor);
 
             var _unselectedShape = children[1] is GradientDrawable ? (GradientDrawable)children[1] : (GradientDrawable)((InsetDrawable)children[1]).Drawable;
-            _unselectedShape.SetColor(_backgroundColor);
-            _unselectedShape.SetStroke(_strokeWidth, _strokeColor);
-        }
-
-        void OnRadioGroupCheckedChanged(object sender, RadioGroup.CheckedChangeEventArgs e)
-        {
-            var rg = (RadioGroup)sender;
-            if (rg.CheckedRadioButtonId == -1)
-                return;
-
-            var id = rg.CheckedRadioButtonId;
-            var radioButton = rg.FindViewById(id);
-            var radioId = rg.IndexOfChild(radioButton);
-
-            var rb = (RadioButton)rg.GetChildAt(radioId);
-
-            _currentRadioButton?.SetTextColor(_tintColor);
-            rb.SetTextColor(_selectedTextColor);
-            UpdateButtonColors(rb);
-
-            _currentRadioButton = rb;
-            Element.SelectedIndex = radioId;
+            _unselectedShape.SetColor(_unselectedTintColor);
         }
 
         #region Drawable Resources
@@ -194,20 +175,20 @@ namespace Segments.Droid.Renderers
             {
                 Text = title,
                 Gravity = GravityFlags.Center,
-                TextAlignment = TextAlignment.Center,
+                TextAlignment = TextAlignment.Center
             };
+
             rb.SetButtonDrawable(null);
-            rb.SetBackground(GetRadioButtonDrawable(position));
-            rb.SetTextColor(RadioButtonColorStateList);
+            rb.SetBackground(GetRadioButtonStateListDrawable(position));
             rb.LayoutParameters = new RadioGroup.LayoutParams(0, LayoutParams.MatchParent, 1.0f);
             rb.SetHeight(_buttonHeight);
-            rb.SetTextSize(ComplexUnitType.Sp, 15.0f);
+            rb.SetTextSize(ComplexUnitType.Sp, _defaultTextSize);
             rb.SetAllCaps(true);
             rb.SetTypeface(null, TypefaceStyle.Bold);
             return rb;
         }
 
-        StateListDrawable GetRadioButtonDrawable(Position position)
+        StateListDrawable GetRadioButtonStateListDrawable(Position position)
         {
             var drawable = new StateListDrawable();
             drawable.AddState(new int[] { Android.Resource.Attribute.StateChecked }, GetCheckedDrawable(position));
@@ -219,8 +200,8 @@ namespace Segments.Droid.Renderers
         {
             var rect = new GradientDrawable();
             rect.SetShape(ShapeType.Rectangle);
-            rect.SetColor(RadioButtonColorStateList);
-            rect.SetStroke(_strokeWidth, _strokeColor);
+            rect.SetColor(_tintColor);
+            rect.SetStroke(_strokeWidth, _strokeColor);            
 
             switch (position)
             {
@@ -243,7 +224,8 @@ namespace Segments.Droid.Renderers
         {
             var rect = new GradientDrawable();
             rect.SetShape(ShapeType.Rectangle);
-            rect.SetColor(RadioButtonColorStateList);
+            rect.SetColor(_backgroundColor);
+            rect.SetStroke(_strokeWidth, _strokeColor);
 
             switch (position)
             {
@@ -261,25 +243,6 @@ namespace Segments.Droid.Renderers
             return new InsetDrawable(rect, -_strokeWidth, 0, 0, 0);
         }
 
-        ColorStateList _radioButtonColorStateList;
-        internal ColorStateList RadioButtonColorStateList
-        {
-            get
-            {
-                if (_radioButtonColorStateList == null)
-                {
-                    _radioButtonColorStateList = new ColorStateList(new int[][] {
-                        new int[] {
-                            Android.Resource.Attribute.StateChecked,
-                            -Android.Resource.Attribute.StateChecked }},
-                        new int[] {
-                            _backgroundColor,
-                            _strokeColor });
-                }
-                return _radioButtonColorStateList;
-            }
-        }
-
         #endregion
 
         public int ConvertToAndroid(float f)
@@ -294,12 +257,19 @@ namespace Segments.Droid.Renderers
         protected override void Dispose(bool disposing)
         {
             if (_radioGroup != null)
+            {
                 _radioGroup.CheckedChange -= OnRadioGroupCheckedChanged;
-            _radioButtonColorStateList?.Dispose();
+                _radioGroup?.RemoveAllViews();
+                _radioGroup?.Dispose();
+            }
+            _currentRadioButton?.Dispose();
             base.Dispose(disposing);
         }
     }
 
+    /// <summary>
+    /// Position of the segment. Left, Middle, Right.
+    /// </summary>
     enum Position
     {
         Middle,
