@@ -123,9 +123,9 @@ namespace Segments.Droid
         {
             BackgroundColor = _element.BackgroundColor.ToAndroid();
             TintColor = _element.TintColor.ToAndroid();
-            UnselectedTintColor = _element.UnselectedTintColor.ToAndroid();
-            UnselectedTextColor = _element.SelectedTextColor.ToAndroid();
-            SelectedTextColor = _element.UnselectedTextColor.ToAndroid();
+            //UnselectedTintColor = _element.UnselectedTintColor.ToAndroid();
+            //UnselectedTextColor = _element.SelectedTextColor.ToAndroid();
+            //SelectedTextColor = _element.UnselectedTextColor.ToAndroid();
         }
 
 

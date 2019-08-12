@@ -25,8 +25,9 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <MtouchArch>x86_64</MtouchArch>
-    <MtouchLink>None</MtouchLink>
+    <MtouchLink>SdkOnly</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
+<MtouchSdkVersion>13.0</MtouchSdkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -134,5 +135,10 @@
       <Project>{731E26EC-64C2-4FB1-9C64-34E768B3AFE0}</Project>
       <Name>Segments</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\twitch.png" />
+    <BundleResource Include="Resources\github.png" />
+    <BundleResource Include="Resources\icon.png" />
   </ItemGroup>
 </Project>

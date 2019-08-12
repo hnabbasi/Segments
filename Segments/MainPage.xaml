@@ -9,7 +9,8 @@
              mc:Ignorable="d"
              x:Class="Segments.MainPage"
              Title="Segments"
-             BackgroundColor="White">
+             BackgroundColor="White"
+             x:Name="this">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
@@ -19,8 +20,8 @@
         <StackLayout x:Name="MainStack"
                      Margin="20"
                      VerticalOptions="Center">
-            <Label Text="Default !?" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
-            <local:SegmentView x:Name="top"
+            <Label Text="Default" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
+            <local:SegmentView x:Name="topText"
                                SelectedIndexChanged="OnSegmentSelected">
                 <local:SegmentView.Children>
                     <local:Segment Title="View A"/>
@@ -28,11 +29,41 @@
                     <local:Segment Title="View C"/>
                 </local:SegmentView.Children>
             </local:SegmentView>
+            <local:SegmentView x:Name="top"
+                               SelectedIndexChanged="OnSegmentSelected">
+                <local:SegmentView.Children>
+                    <local:Segment Title="View A" Image="github.png"/>
+                    <local:Segment Title="View B" Image="icon.png"/>
+                    <local:Segment Title="View C" Image="twitch.png"/>
+                </local:SegmentView.Children>
+            </local:SegmentView>
             
             <Label x:Name="ViewSelected"
                     Text="Select a segment"
                     FontSize="Small"
                     HorizontalTextAlignment="Center"/>
+
+            <!--<Label Text="Data Binding" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
+            <local:SegmentView BindableLayout.ItemsSource="{Binding Names, Source={x:Reference this}}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding}"/>
+                        </StackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </local:SegmentView>-->
+
+            <Label Text="Tint Color" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
+            <local:SegmentView x:Name="top15"
+                               BorderColor="#CC0000"
+                               CornerRadius="2">
+                <local:SegmentView.Children>
+                    <local:Segment Title="View A"/>
+                    <local:Segment Title="View B"/>
+                    <local:Segment Title="View C"/>
+                </local:SegmentView.Children>
+            </local:SegmentView>
 
             <Label Text="Corner Radius" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
             <local:SegmentView x:Name="top1"
@@ -69,62 +100,6 @@
                     <local:Segment Title="View C"/>
                 </local:SegmentView.Children>
             </local:SegmentView>
-        
-        
-            <!--<StackLayout Orientation="Horizontal"
-                            VerticalOptions="CenterAndExpand"
-                            Margin="10">
-                <Label Text="Unit"
-                        VerticalTextAlignment="Center"
-                        HorizontalOptions="FillAndExpand"/>
-                <local:SegmentView HorizontalOptions="FillAndExpand">
-                    <local:SegmentView.Children>
-                        <local:Segment Title="C"/>
-                        <local:Segment Title="F"/>
-                    </local:SegmentView.Children>
-                </local:SegmentView>
-            </StackLayout>-->
-        </StackLayout>
-        <StackLayout BackgroundColor="Silver" Grid.Row="1" Padding="20">
-            <StackLayout Orientation="Horizontal">
-                <Label Text="Corner Radius"
-                       VerticalTextAlignment="Center"/>
-                <Label x:Name="CornerRadiusValue"
-                       Text="Default"
-                       FontSize="Small"
-                       FontAttributes="Bold"
-                       VerticalTextAlignment="Center"
-                       HorizontalOptions="EndAndExpand"/>
-                <Slider x:Name="CornerRadiusSlider"
-                        Minimum="0"
-                        Maximum="20"
-                        ValueChanged="CornerRadiusChanged"
-                        HorizontalOptions="FillAndExpand"/>
-            </StackLayout>
-            <StackLayout Orientation="Horizontal">
-                <Label Text="Tint Color"
-                        VerticalTextAlignment="Center"
-                        HorizontalOptions="FillAndExpand"/>
-                <Picker x:Name="ColorPicker"
-                        Title="Select color"
-                        ItemDisplayBinding="{Binding Item1}"
-                        SelectedIndexChanged="TintChanged"
-                        HorizontalOptions="FillAndExpand"/>
-            </StackLayout>
-            <StackLayout Orientation="Horizontal">
-                <Label Text="Border Width"
-                       VerticalTextAlignment="Center"/>
-                <Label x:Name="BorderWidthValue"
-                       Text="Default"
-                       FontSize="Small"
-                       FontAttributes="Bold"
-                       VerticalTextAlignment="Center"
-                       HorizontalOptions="EndAndExpand"/>
-                <Stepper x:Name="BorderWidthStepper"
-                         Minimum="0"
-                         Maximum="10"
-                         ValueChanged="OnBorderWidthChanged"/>
-            </StackLayout>
         </StackLayout>
     </Grid>
 </ContentPage>

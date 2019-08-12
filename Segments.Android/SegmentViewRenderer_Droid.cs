@@ -48,8 +48,6 @@ namespace Segments.Droid.Renderers
 
             if (Control == null)
             {
-                //Initialize();
-                //PopulateSegments();
                 SetNativeControl(BuildControl());
             }
 

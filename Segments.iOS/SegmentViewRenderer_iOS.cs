@@ -1,14 +1,27 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using System.ComponentModel;
-using UIKit;
 using System.Linq;
 using Segments;
 using Segments.iOS.Renderers;
 using System;
+using System.Threading.Tasks;
+using System.Threading;
+using Xamarin.Forms.Internals;
+using Foundation;
+
+#if __MOBILE__
+using UIKit;
+using NativeImage = UIKit.UIImage;
 
 [assembly: ExportRenderer(typeof(SegmentView), typeof(SegmentControlRenderer))]
 namespace Segments.iOS.Renderers
+#else
+using AppKit;
+using CoreAnimation;
+using NativeImage = AppKit.NSImage;
+namespace Xamarin.Forms.Platform.MacOS
+#endif
 {
     public class SegmentControlRenderer : ViewRenderer<SegmentView, UISegmentedControl>
     {
@@ -27,7 +40,15 @@ namespace Segments.iOS.Renderers
 
                 for (int i = 0; i < Element.Children.Count; i++)
                 {
-                    _control.InsertSegment(Element.Children.ElementAt(i).Title, i, false);
+                    var segment = Element.Children.ElementAt(i);
+                    if (segment.Image != null)
+                    {
+                        var img = NativeImage.FromFile(((FileImageSource)segment.Image).File);
+                        img = img.Scale(new CoreGraphics.CGSize(17,17)); // Apple docs
+                        _control.InsertSegment(img, i, false);
+                    }
+                    else
+                        _control.InsertSegment(segment.Title, i, false);
                 }
 
                 _control.ClipsToBounds = true;
@@ -71,16 +92,20 @@ namespace Segments.iOS.Renderers
                     break;
                 case "IsEnabled":
                     _control.Enabled = Element.IsEnabled;
-                    _control.TintColor = Element.IsEnabled ? Element.TintColor.ToUIColor() : Element.UnselectedTintColor.ToUIColor();
+                    _control.TintColor = Element.IsEnabled ? Element.TintColor.ToUIColor() : Color.Gray.ToUIColor();// Element.UnselectedTintColor.ToUIColor();
                     break;
             }
         }
 
         void SetSelectedTextColor()
         {
+            // Don't change the color on iOS 13
+            if (UIDevice.CurrentDevice.CheckSystemVersion(13, 0))
+                return;
+
             var attr = new UITextAttributes
             {
-                TextColor = Element.IsEnabled ? Element.SelectedTextColor.ToUIColor() : Element.TintColor.ToUIColor()
+                TextColor = Element.IsEnabled ? Color.White.ToUIColor() : Element.TintColor.ToUIColor()
             };
             _control.SetTitleTextAttributes(attr, Element.IsEnabled ? UIControlState.Selected : UIControlState.Normal);
         }

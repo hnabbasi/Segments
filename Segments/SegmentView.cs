@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 
 namespace Segments
-{
+{ 
     public class SegmentView : View, IViewContainer<Segment>, IBorderElement
     {
         private static readonly double _borderWidthDefaultValue = Device.RuntimePlatform == Device.Android ? 3.0 : 1.0;
@@ -18,7 +18,7 @@ namespace Segments
         public static BindableProperty CornerRadiusProperty = BindableProperty.Create(nameof(CornerRadius), typeof(int), typeof(SegmentView), _cornerRadiusDefaultValue);
         public static BindableProperty BorderColorProperty = BindableProperty.Create(nameof(BorderColor), typeof(Color), typeof(SegmentView), _borderColorDefaultValue, propertyChanged:OnBorderColorPropertyChanged);
         public static BindableProperty BorderWidthProperty = BindableProperty.Create(nameof(BorderWidth), typeof(double), typeof(SegmentView), _borderWidthDefaultValue);
-
+        
         #region Can't control these on iOS elegantly. Maybe move it to On<Android>
 
         //public static BindableProperty UnselectedTintColorProperty = BindableProperty.Create(nameof(UnselectedTintColor), typeof(Color), typeof(SegmentView), default(Color));
@@ -81,6 +81,7 @@ namespace Segments
         public Color BorderColorDefaultValue => _borderColorDefaultValue;
         public double BorderWidthDefaultValue => _borderWidthDefaultValue;
 
+
         public void OnBorderColorPropertyChanged(Color oldValue, Color newValue)
         {
             // what's this for?
@@ -107,11 +108,18 @@ namespace Segments
     public class Segment : View
     {
         public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(Segment), string.Empty);
+        public static BindableProperty ImageProperty = BindableProperty.Create(nameof(Image), typeof(ImageSource), typeof(Segment));
 
         public string Title
         {
             get { return (string)GetValue(TitleProperty); }
             set { SetValue(TitleProperty, value); }
+        }
+
+        public ImageSource Image
+        {
+            get { return (ImageSource)GetValue(ImageProperty); }
+            set { SetValue(ImageProperty, value); }
         }
     }
 }
