@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:d="http://xamarin.com/schemas/2014/forms/design" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:Segments;assembly=Segments"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              ios:Page.UseSafeArea="true"
@@ -20,86 +21,30 @@
         <StackLayout x:Name="MainStack"
                      Margin="20"
                      VerticalOptions="Center">
-            <Label Text="Default" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
-            <local:SegmentView x:Name="topText"
-                               SelectedIndexChanged="OnSegmentSelected">
-                <local:SegmentView.Children>
-                    <local:Segment Title="View A"/>
-                    <local:Segment Title="View B"/>
-                    <local:Segment Title="View C"/>
-                </local:SegmentView.Children>
-            </local:SegmentView>
-            <local:SegmentView x:Name="top"
-                               SelectedIndexChanged="OnSegmentSelected">
-                <local:SegmentView.Children>
-                    <local:Segment Title="View A" Image="github.png"/>
-                    <local:Segment Title="View B" Image="icon.png"/>
-                    <local:Segment Title="View C" Image="twitch.png"/>
-                </local:SegmentView.Children>
-            </local:SegmentView>
+            <local:Segments x:Name="textSegments" SelectedIndexChanged="OnSegmentSelected">
+                <local:Segments.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>View A</x:String>
+                        <x:String>View B</x:String>
+                        <x:String>View C</x:String>
+                    </x:Array>
+                </local:Segments.ItemsSource>
+            </local:Segments>
+
+            <local:Segments x:Name="imageSegments" SelectedIndexChanged="OnSegmentSelected">
+                <local:Segments.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>github.png</x:String>
+                        <x:String>icon.png</x:String>
+                        <x:String>twitch.png</x:String>
+                    </x:Array>
+                </local:Segments.ItemsSource>
+            </local:Segments>
             
             <Label x:Name="ViewSelected"
                     Text="Select a segment"
                     FontSize="Small"
                     HorizontalTextAlignment="Center"/>
-
-            <!--<Label Text="Data Binding" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
-            <local:SegmentView BindableLayout.ItemsSource="{Binding Names, Source={x:Reference this}}">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout Orientation="Horizontal">
-                            <Label Text="{Binding}"/>
-                        </StackLayout>
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-            </local:SegmentView>-->
-
-            <Label Text="Tint Color" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
-            <local:SegmentView x:Name="top15"
-                               BorderColor="#CC0000"
-                               CornerRadius="2">
-                <local:SegmentView.Children>
-                    <local:Segment Title="View A"/>
-                    <local:Segment Title="View B"/>
-                    <local:Segment Title="View C"/>
-                </local:SegmentView.Children>
-            </local:SegmentView>
-
-            <Label Text="Corner Radius" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
-            <local:SegmentView x:Name="top1"
-                               TintColor="Purple"
-                               CornerRadius="20">
-                <local:SegmentView.Children>
-                    <local:Segment Title="View A"/>
-                    <local:Segment Title="View B"/>
-                    <local:Segment Title="View C"/>
-                </local:SegmentView.Children>
-            </local:SegmentView>
-            
-            <Label Text="Border Color" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
-            <local:SegmentView x:Name="top2"
-                               TintColor="Purple"
-                               CornerRadius="20"
-                               BorderColor="Blue">
-                <local:SegmentView.Children>
-                    <local:Segment Title="View A"/>
-                    <local:Segment Title="View B"/>
-                    <local:Segment Title="View C"/>
-                </local:SegmentView.Children>
-            </local:SegmentView>
-            
-            <Label Text="Border Width" FontSize="Small" FontAttributes="Bold" Margin="0,10,0,0"/>
-            <local:SegmentView x:Name="top3"
-                               TintColor="Green"
-                               CornerRadius="20"
-                               BorderColor="Red"
-                               BorderWidth="4">
-                <local:SegmentView.Children>
-                    <local:Segment Title="View A"/>
-                    <local:Segment Title="View B"/>
-                    <local:Segment Title="View C"/>
-                </local:SegmentView.Children>
-            </local:SegmentView>
         </StackLayout>
     </Grid>
 </ContentPage>

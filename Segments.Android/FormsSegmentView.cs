@@ -13,10 +13,10 @@ namespace Segments.Droid
     public class FormsSegmentView : RadioGroup
     {
         readonly Context _context;
-        readonly SegmentView _element;
+        readonly Segments _element;
         RadioButton _currentRadioButton;
 
-        public FormsSegmentView(Context context, SegmentView element) : base(context)
+        public FormsSegmentView(Context context, Segments element) : base(context)
         {
             _context = context;
             _element = element;
@@ -52,7 +52,7 @@ namespace Segments.Droid
         public Color BackgroundColor { get; set; }
         public Color SelectedTextColor { get; set; }
         public Color UnselectedTextColor { get; set; }
-        public IEnumerable<Segment> Segments => _element.Children;
+        public IEnumerable<SegmentItem> Segments => _element.Children;
         
         void PopulateSegments()
         {

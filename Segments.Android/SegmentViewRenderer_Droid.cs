@@ -9,10 +9,10 @@ using Segments;
 using Segments.Droid.Renderers;
 using Xamarin.Forms.Platform.Android;
 
-[assembly: Xamarin.Forms.ExportRenderer(typeof(SegmentView), typeof(SegmentControlRenderer))]
+[assembly: Xamarin.Forms.ExportRendererAttribute(typeof(Segments.Segments), typeof(SegmentControlRenderer))]
 namespace Segments.Droid.Renderers
 {
-    public class SegmentControlRenderer : ViewRenderer<SegmentView, RadioGroup>
+    public class SegmentControlRenderer : ViewRenderer<Segments, RadioGroup>
     {
         readonly Context _context;
         readonly float _defaultControlHeight = 30.0f;
@@ -42,7 +42,7 @@ namespace Segments.Droid.Renderers
         /// Whent the element is changed.
         /// </summary>
         /// <param name="e">Xamarin.Forms Elements</param>
-        protected override void OnElementChanged(ElementChangedEventArgs<SegmentView> e)
+        protected override void OnElementChanged(ElementChangedEventArgs<Segments> e)
         {
             base.OnElementChanged(e);
 

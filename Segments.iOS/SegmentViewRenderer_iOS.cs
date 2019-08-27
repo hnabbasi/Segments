@@ -14,7 +14,7 @@ using Foundation;
 using UIKit;
 using NativeImage = UIKit.UIImage;
 
-[assembly: ExportRenderer(typeof(SegmentView), typeof(SegmentControlRenderer))]
+[assembly: ExportRenderer(typeof(Segments.Segments), typeof(SegmentControlRenderer))]
 namespace Segments.iOS.Renderers
 #else
 using AppKit;
@@ -23,11 +23,11 @@ using NativeImage = AppKit.NSImage;
 namespace Xamarin.Forms.Platform.MacOS
 #endif
 {
-    public class SegmentControlRenderer : ViewRenderer<SegmentView, UISegmentedControl>
+    public class SegmentControlRenderer : ViewRenderer<Segments, UISegmentedControl>
     {
         UISegmentedControl _control;
 
-        protected override void OnElementChanged(ElementChangedEventArgs<SegmentView> e)
+        protected async override void OnElementChanged(ElementChangedEventArgs<Segments> e)
         {
             base.OnElementChanged(e);
 
@@ -38,17 +38,17 @@ namespace Xamarin.Forms.Platform.MacOS
             {
                 _control = new UISegmentedControl();
 
-                for (int i = 0; i < Element.Children.Count; i++)
+                for (int i = 0; i < Element.Items.Count; i++)
                 {
-                    var segment = Element.Children.ElementAt(i);
-                    if (segment.Image != null)
+                    var segment = Element.Items.ElementAt(i);
+                    var img = await GetImage(segment);
+                    if (img == null)
+                        _control.InsertSegment(segment, i, false);
+                    else
                     {
-                        var img = NativeImage.FromFile(((FileImageSource)segment.Image).File);
-                        img = img.Scale(new CoreGraphics.CGSize(17,17)); // Apple docs
+                        img = img.Scale(new CoreGraphics.CGSize(17, 17)); // Apple docs
                         _control.InsertSegment(img, i, false);
                     }
-                    else
-                        _control.InsertSegment(segment.Title, i, false);
                 }
 
                 _control.ClipsToBounds = true;
@@ -77,7 +77,28 @@ namespace Xamarin.Forms.Platform.MacOS
             if (e.NewElement != null)
                 _control.ValueChanged += OnSelectedIndexChanged;
         }
+        private Task<NativeImage> GetImage(ImageSource imageSource)
+        {
+            IImageSourceHandler handler = null;
 
+            if (imageSource is FileImageSource)
+            {
+                handler = new FileImageSourceHandler();
+            }
+            else if (imageSource is StreamImageSource)
+            {
+                handler = new StreamImagesourceHandler();
+            }
+            else if (imageSource is UriImageSource)
+            {
+                handler = new ImageLoaderSourceHandler();
+            }
+            else if (imageSource is FontImageSource)
+            {
+                handler = new FontImageSourceHandler();
+            }
+            return handler.LoadImageAsync(imageSource);
+        }
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged(sender, e);
