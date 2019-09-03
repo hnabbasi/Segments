@@ -21,12 +21,23 @@
         <StackLayout x:Name="MainStack"
                      Margin="20"
                      VerticalOptions="Center">
-            <local:Segments x:Name="textSegments" SelectedIndexChanged="OnSegmentSelected">
+            
+            <local:Segments x:Name="textSegmentsSTR"
+                            SelectedIndexChanged="OnSegmentSelected"
+                            ItemsSource="{Binding StringSource}"/>
+
+            <!--<local:Segments x:Name="textSegments"
+                            SelectedIndexChanged="OnSegmentSelected"
+                            ItemsSource="{Binding Source}"
+                            ItemDisplayBinding="{Binding Name}"/>-->
+
+            <local:Segments x:Name="textSegmentsXaml"
+                            SelectedIndexChanged="OnSegmentSelected">
                 <local:Segments.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
-                        <x:String>View A</x:String>
-                        <x:String>View B</x:String>
-                        <x:String>View C</x:String>
+                        <x:String>XAML A</x:String>
+                        <x:String>XAML B</x:String>
+                        <x:String>XAML C</x:String>
                     </x:Array>
                 </local:Segments.ItemsSource>
             </local:Segments>
@@ -34,9 +45,9 @@
             <local:Segments x:Name="imageSegments" SelectedIndexChanged="OnSegmentSelected">
                 <local:Segments.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
-                        <x:String>github.png</x:String>
-                        <x:String>icon.png</x:String>
-                        <x:String>twitch.png</x:String>
+                        <x:String>github</x:String>
+                        <x:String>icon</x:String>
+                        <x:String>twitch</x:String>
                     </x:Array>
                 </local:Segments.ItemsSource>
             </local:Segments>

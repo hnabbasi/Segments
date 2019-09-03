@@ -77,6 +77,25 @@ namespace Xamarin.Forms.Platform.MacOS
             if (e.NewElement != null)
                 _control.ValueChanged += OnSelectedIndexChanged;
         }
+
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
+
+            if (_control == null || Element == null) return;
+
+            if (e.PropertyName == Segments.SelectedIndexProperty.PropertyName)
+            {
+                _control.SelectedSegment = Element.SelectedIndex;
+                SetSelectedTextColor();
+            }
+            else if(e.PropertyName == VisualElement.IsEnabledProperty.PropertyName)
+            {
+                _control.Enabled = Element.IsEnabled;
+                _control.TintColor = Element.IsEnabled ? Element.TintColor.ToUIColor() : Color.Gray.ToUIColor();// Element.UnselectedTintColor.ToUIColor()                    
+            }
+        }
+
         private Task<NativeImage> GetImage(ImageSource imageSource)
         {
             IImageSourceHandler handler = null;
@@ -98,24 +117,6 @@ namespace Xamarin.Forms.Platform.MacOS
                 handler = new FontImageSourceHandler();
             }
             return handler.LoadImageAsync(imageSource);
-        }
-        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            base.OnElementPropertyChanged(sender, e);
-
-            if (_control == null || Element == null) return;
-
-            switch (e.PropertyName)
-            {
-                case "SelectedSegment":
-                    _control.SelectedSegment = Element.SelectedIndex;
-                    SetSelectedTextColor();
-                    break;
-                case "IsEnabled":
-                    _control.Enabled = Element.IsEnabled;
-                    _control.TintColor = Element.IsEnabled ? Element.TintColor.ToUIColor() : Color.Gray.ToUIColor();// Element.UnselectedTintColor.ToUIColor();
-                    break;
-            }
         }
 
         void SetSelectedTextColor()
